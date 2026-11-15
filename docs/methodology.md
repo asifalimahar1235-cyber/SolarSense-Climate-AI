@@ -8,7 +8,7 @@ The project requests daily observations from NASA POWER at latitude 28.0167 and 
 - ALLSKY_SFC_SW_DWN: all-sky surface shortwave downward radiation (kWh/m²/day)
 - T2M: 2 m air temperature (°C)
 - RH2M: relative humidity at 2 m (%)
-- CLD_AMT: cloud amount (%)
+- CLOUD_AMT: cloud amount (community-specific units)
 
 The data endpoint and parameter availability should be checked when running the project. NASA POWER may revise or extend its archive.
 
