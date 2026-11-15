@@ -27,6 +27,36 @@ Solar availability changes with weather and season. Households and schools in th
 7. Evaluate once on a later chronological holdout and compare against persistence and seasonal-climatology baselines.
 8. Optionally use Open-Meteo forecast weather inputs for a live demonstration.
 
+
+## Research workflow
+
+```mermaid
+flowchart TD
+    A["NASA POWER daily observations"] --> B["Calendar alignment and data cleaning"]
+    B --> C["Next-calendar-day target construction"]
+    C --> D["Lag, rolling, weather and seasonal features"]
+    D --> E["Chronological training period"]
+    E --> F["Four-fold time-series cross-validation"]
+    F --> G["Select Extra Trees"]
+    G --> H["One later held-out evaluation"]
+    H --> I["Compare with persistence and seasonal baselines"]
+    I --> J["Error analysis and documented limitations"]
+```
+
+The enhanced notebook is the reproducible research benchmark. The Streamlit dashboard is an accompanying interactive explainer and uses a separate, simpler Linear Regression model; its metrics must not be confused with the benchmark table.
+
+## Project structure
+
+| Path | Purpose |
+|---|---|
+| `SolarSense_Enhanced_Benchmark.ipynb` | Main model comparison and held-out evaluation |
+| `SolarSense_Veritas_AI_Hackathon_2026.ipynb` | Initial baseline experiment |
+| `app.py` | Interactive Streamlit dashboard |
+| `src/` | Data, feature, model and evaluation utilities for the dashboard |
+| `results/` | Exported benchmark tables and prediction results |
+| `docs/methodology.md` | Research design and evaluation notes |
+| `SUBMISSION.md` | Competition write-up |
+
 ## Data sources
 
 - [NASA POWER](https://power.larc.nasa.gov/) — historical daily point data.
