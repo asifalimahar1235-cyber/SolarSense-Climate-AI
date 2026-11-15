@@ -94,6 +94,10 @@ The dashboard calculates MAE, RMSE and R² on the latest 20% of the supervised o
 
 AI assistance was used during development, including GitHub Copilot and ChatGPT. Generated code and project outputs must be reviewed and tested by the project author.
 
+## Hackathon submission
+
+See [SUBMISSION.md](SUBMISSION.md) for the project write-up and the final results/details checklist. Fill in the actual held-out test metrics after running the dashboard; do not report unmeasured results.
+
 ## Competition context
 
 Developed for the Veritas AI International High School Hackathon 2026, Climate Track.
