@@ -1,44 +1,89 @@
-"""Optional next-day demonstration using Open-Meteo weather forecasts."""
+"""Experimental next-available-day estimate using the benchmark feature design.
+
+This is a current-data demonstration, not the historical holdout evaluation.
+It trains the benchmark's Extra Trees configuration on all available labelled
+NASA POWER observations and predicts the day after the latest usable input day.
+"""
 from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-import requests
+from sklearn.ensemble import ExtraTreesRegressor
 
-from .features import FEATURES
+FEATURES = [
+    "solar_lag_1",
+    "solar_lag_2",
+    "solar_lag_3",
+    "solar_roll_3",
+    "solar_roll_7",
+    "temperature",
+    "humidity",
+    "cloud",
+    "temperature_change_1d",
+    "cloud_change_1d",
+    "target_day_sin",
+    "target_day_cos",
+]
 
-OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
+
+def build_forecast_features(frame: pd.DataFrame) -> pd.DataFrame:
+    """Build the same day-t inputs used by the enhanced benchmark."""
+    required = {"solar", "temperature", "humidity", "cloud"}
+    missing = required.difference(frame.columns)
+    if missing:
+        raise ValueError(f"Input data is missing columns: {sorted(missing)}")
+    data = frame.copy().sort_index()
+    if not isinstance(data.index, pd.DatetimeIndex):
+        raise ValueError("Input data must use a DatetimeIndex.")
+    if data.index.has_duplicates:
+        raise ValueError("Input dates must be unique.")
+    data = data.asfreq("D")
+
+    target_dates = data.index + pd.Timedelta(days=1)
+    day_number = target_dates.dayofyear
+    features = pd.DataFrame(index=data.index)
+    features["solar_lag_1"] = data["solar"]
+    features["solar_lag_2"] = data["solar"].shift(1)
+    features["solar_lag_3"] = data["solar"].shift(2)
+    features["solar_roll_3"] = data["solar"].rolling(3, min_periods=3).mean()
+    features["solar_roll_7"] = data["solar"].rolling(7, min_periods=7).mean()
+    features["temperature"] = data["temperature"]
+    features["humidity"] = data["humidity"]
+    features["cloud"] = data["cloud"]
+    features["temperature_change_1d"] = data["temperature"].diff()
+    features["cloud_change_1d"] = data["cloud"].diff()
+    features["target_day_sin"] = np.sin(2 * np.pi * day_number / 365.25)
+    features["target_day_cos"] = np.cos(2 * np.pi * day_number / 365.25)
+    return features
 
 
-def get_next_day_prediction(model, latitude=28.0167, longitude=69.3167):
-    params = {
-        "latitude": latitude,
-        "longitude": longitude,
-        "daily": "temperature_2m_mean,relative_humidity_2m_mean,cloud_cover_mean",
-        "timezone": "Asia/Karachi",
-        "forecast_days": 2,
-    }
-    response = requests.get(OPEN_METEO_URL, params=params, timeout=45)
-    response.raise_for_status()
-    daily = response.json()["daily"]
+def forecast_next_available_day(frame: pd.DataFrame) -> dict:
+    """Fit the benchmark Extra Trees configuration and estimate next available day."""
+    features = build_forecast_features(frame)
+    training = features.join(frame.sort_index().asfreq("D")["solar"].shift(-1).rename("target"))
+    training = training.dropna(subset=FEATURES + ["target"])
+    forecast_inputs = features.dropna(subset=FEATURES)
 
-    # Today's forecast weather is used as the available input to predict tomorrow.
-    input_date = pd.Timestamp(daily["time"][0])
-    target_date = pd.Timestamp(daily["time"][1])
-    row = pd.DataFrame([{
-        "temperature": daily["temperature_2m_mean"][0],
-        "humidity": daily["relative_humidity_2m_mean"][0],
-        "cloud": daily["cloud_cover_mean"][0],
-        "day_sin": np.sin(2 * np.pi * target_date.dayofyear / 365.25),
-        "day_cos": np.cos(2 * np.pi * target_date.dayofyear / 365.25),
-    }])[FEATURES]
+    if len(training) < 100:
+        raise ValueError("At least 100 complete training examples are required.")
+    if forecast_inputs.empty:
+        raise ValueError("There are not enough recent complete observations to forecast.")
 
-    if row.isna().any().any():
-        raise ValueError("Open-Meteo did not provide all required weather forecast inputs.")
-
-    prediction = float(model.predict(row)[0])
+    latest = forecast_inputs.iloc[[-1]]
+    model = ExtraTreesRegressor(
+        n_estimators=250,
+        min_samples_leaf=3,
+        max_features=0.9,
+        random_state=42,
+        n_jobs=-1,
+    )
+    model.fit(training[FEATURES], training["target"])
+    prediction = max(0.0, float(model.predict(latest[FEATURES])[0]))
+    input_date = latest.index[0]
     return {
         "input_date": input_date.date().isoformat(),
-        "target_date": target_date.date().isoformat(),
-        "predicted_solar": max(0.0, prediction),
+        "target_date": (input_date + pd.Timedelta(days=1)).date().isoformat(),
+        "predicted_solar": prediction,
+        "training_observations": int(len(training)),
+        "latest_observation": float(latest["solar_lag_1"].iloc[0]),
     }
