@@ -6,6 +6,7 @@ from sklearn.metrics import mean_absolute_error
 from src.features import FEATURES, make_supervised, chronological_split
 from src.model import train_model
 from src.evaluation import evaluate
+from src.forecasting import forecast_next_available_day
 
 
 def sample_data(n=40):
@@ -89,3 +90,15 @@ def test_published_benchmark_artifacts_are_consistent():
         predictions["actual"], predictions["persistence"]
     ) == pytest.approx(summary["persistence_mae"], abs=1e-8)
     assert predictions["target_date"].is_monotonic_increasing
+
+
+
+def test_next_available_day_forecast_uses_latest_complete_input_date():
+    raw = sample_data(180)
+    result = forecast_next_available_day(raw)
+
+    assert result["input_date"] == raw.index[-1].date().isoformat()
+    assert result["target_date"] == (raw.index[-1] + pd.Timedelta(days=1)).date().isoformat()
+    assert result["training_observations"] >= 100
+    assert np.isfinite(result["predicted_solar"])
+    assert result["predicted_solar"] >= 0
