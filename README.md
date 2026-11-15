@@ -99,7 +99,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-The dashboard downloads NASA POWER data on first run and caches a local CSV in `data/`. **Dashboard distinction:** this interactive app currently trains a separate Linear Regression model with a compact feature set. Its on-screen metrics are not the enhanced Extra Trees benchmark results below; the enhanced Colab notebook is the primary competition evaluation.
+The dashboard presents the published enhanced Extra Trees benchmark, its two baselines, held-out predictions, error analysis, and NASA POWER data explorer. It reads the saved experiment outputs in `results/`; it does not silently train a different model or replace the notebook's evaluation. NASA POWER observations are downloaded on first run and cached in `data/`.
 
 ## Run tests
 
@@ -140,7 +140,7 @@ The original `SolarSense_Veritas_AI_Hackathon_2026.ipynb` also reported a chrono
 
 The full project write-up is in [SUBMISSION.md](SUBMISSION.md).
 
-**Verification note:** The Colab experiment was run. The Streamlit dashboard and automated test suite have not been independently verified as running successfully.
+**Verification note:** The Colab experiment was run. The automated tests verify feature construction, chronological splitting, model behavior, and consistency of the published benchmark CSV files. The dashboard should still be launched locally before a public deployment.
 
 ## Limitations
 
