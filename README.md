@@ -82,6 +82,8 @@ An additional notebook, [SolarSense_Enhanced_Benchmark.ipynb](SolarSense_Enhance
 
 [Open the enhanced benchmark in Google Colab](https://colab.research.google.com/github/asifalimahar1235-cyber/SolarSense-Climate-AI/blob/main/SolarSense_Enhanced_Benchmark.ipynb).
 
+A short, metrics-aware recording script is available in [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
+
 **Important:** This enhanced benchmark has been added but its outputs have not yet been run and verified. Do not treat its future results as measured until the notebook completes successfully. The existing metrics below are from the original Linear Regression experiment.
 
 ## Evaluation and results
