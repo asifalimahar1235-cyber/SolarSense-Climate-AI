@@ -102,7 +102,7 @@ The enhanced Google Colab benchmark used 2,557 daily NASA POWER calendar records
 
 The selected Extra Trees model achieved a held-out MAE of **0.3779 kWh/m²/day**, RMSE of **0.5658 kWh/m²/day**, and R² of **0.8053**. The persistence baseline MAE was **0.4094**, while the seasonal-climatology baseline MAE was **0.5334 kWh/m²/day**. Extra Trees reduced MAE by **7.69% versus persistence** and **29.15% versus seasonal climatology** on this test period. These are historical, single-location benchmark results—not proof of operational forecast reliability.
 
-The benchmark also reports seasonal-climatology MAE **0.5334 kWh/m²/day** and includes both baselines in the notebook's comparison and prediction exports. The exported CSV files in `results/` should be refreshed from the latest Colab run before final submission.
+The benchmark also reports seasonal-climatology MAE **0.5334 kWh/m²/day**. The comparison and summary CSVs have been refreshed with the seasonal-baseline metrics; the prediction CSV retains the held-out actual, Extra Trees prediction, persistence prediction and error series.
 
 ### Initial baseline experiment
 
