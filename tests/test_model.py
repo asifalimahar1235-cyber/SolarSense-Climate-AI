@@ -6,7 +6,11 @@ from sklearn.metrics import mean_absolute_error
 from src.features import FEATURES, make_supervised, chronological_split
 from src.model import train_model
 from src.evaluation import evaluate
-from src.forecasting import forecast_next_available_day
+from src.forecasting import (
+    FEATURES as FORECAST_FEATURES,
+    build_forecast_features,
+    forecast_next_available_day,
+)
 
 
 def sample_data(n=40):
@@ -102,3 +106,28 @@ def test_next_available_day_forecast_uses_latest_complete_input_date():
     assert result["training_observations"] >= 100
     assert np.isfinite(result["predicted_solar"])
     assert result["predicted_solar"] >= 0
+
+
+
+def test_forecast_features_match_enhanced_benchmark_design():
+    raw = sample_data(12)
+    features = build_forecast_features(raw)
+
+    expected = [
+        "solar_lag_1",
+        "solar_lag_2",
+        "solar_lag_3",
+        "solar_roll_3",
+        "solar_roll_7",
+        "temperature",
+        "humidity",
+        "cloud",
+        "temperature_change_1d",
+        "cloud_change_1d",
+        "target_day_sin",
+        "target_day_cos",
+    ]
+    assert FORECAST_FEATURES == expected
+    assert list(features.columns) == expected
+    assert features.loc[raw.index[-1], "solar_lag_1"] == pytest.approx(raw["solar"].iloc[-1])
+    assert features.loc[raw.index[-1], "solar_roll_3"] == pytest.approx(raw["solar"].iloc[-3:].mean())
