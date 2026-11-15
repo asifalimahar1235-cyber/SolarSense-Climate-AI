@@ -2,12 +2,14 @@
 from __future__ import annotations
 
 from pathlib import Path
+from datetime import timedelta
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
 
 from src.data import fetch_nasa_power, save_dataset
+from src.forecasting import forecast_next_available_day
 
 ROOT = Path(__file__).resolve().parent
 RESULTS = ROOT / "results"
@@ -79,11 +81,14 @@ def load_climate() -> pd.DataFrame:
     if DATA_PATH.exists():
         try:
             cached = pd.read_csv(DATA_PATH, parse_dates=["date"], index_col="date")
-            if not cached.empty:
+            recent_enough = cached.index.max().date() >= (
+                pd.Timestamp.now(tz="UTC").date() - timedelta(days=10)
+            )
+            if not cached.empty and recent_enough:
                 return cached
         except Exception:
             pass
-    frame = fetch_nasa_power(start="20190101", end="20251231")
+    frame = fetch_nasa_power(start="20190101")
     save_dataset(frame, str(DATA_PATH))
     return frame
 
@@ -103,8 +108,8 @@ try:
         f"{predictions['target_date'].min().date()} to {predictions['target_date'].max().date()}"
     )
 
-    overview, benchmark, errors, data_tab, methodology = st.tabs(
-        ["Overview", "Model benchmark", "Error analysis", "Climate explorer", "Research notes"]
+    overview, benchmark, errors, forecast_tab, data_tab, methodology = st.tabs(
+        ["Overview", "Model benchmark", "Error analysis", "Next-day estimate", "Climate explorer", "Research notes"]
     )
 
     with overview:
@@ -179,6 +184,37 @@ try:
         st.warning(
             "Large errors are part of the result, not something to hide. Rapid weather changes, "
             "cloud variability, data limitations and the model's simplified inputs may contribute."
+        )
+
+    with forecast_tab:
+        st.markdown('<div class="ss-section">Experimental current-data demonstration</div>', unsafe_allow_html=True)
+        st.markdown("### Estimate the day after the latest usable NASA observation")
+        st.write(
+            "This demonstration rebuilds the benchmark's Extra Trees model using all currently "
+            "available labelled NASA POWER observations, then estimates the following calendar day. "
+            "It is separate from the historical held-out test and is not a validated operational forecast."
+        )
+        try:
+            live_estimate = forecast_next_available_day(climate)
+            p1, p2, p3 = st.columns(3)
+            p1.metric("Estimated target date", live_estimate["target_date"])
+            p2.metric("Estimated solar radiation", f"{live_estimate['predicted_solar']:.3f} kWh/m²/day")
+            p3.metric("Latest input observation", live_estimate["input_date"])
+            st.caption(
+                f"Model training examples: {live_estimate['training_observations']:,}. "
+                f"Solar radiation observed on the input date: "
+                f"{live_estimate['latest_observation']:.3f} kWh/m²/day."
+            )
+            st.info(
+                "The target date is one day after the latest usable NASA POWER input date, "
+                "which may be several days behind today's date. Check the displayed dates before interpreting it."
+            )
+        except Exception as forecast_error:
+            st.warning(f"The experimental estimate is not available: {forecast_error}")
+        st.caption(
+            "This estimate uses the same Extra Trees hyperparameters and feature definitions as the "
+            "research benchmark, refit on all available data. It must not be confused with the "
+            "510-day historical test result."
         )
 
     with data_tab:
