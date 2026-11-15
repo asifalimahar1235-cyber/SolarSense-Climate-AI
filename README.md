@@ -21,10 +21,11 @@ Solar availability changes with weather and season. Households and schools in th
 1. Fetch daily solar radiation, temperature, humidity and cloud amount from the NASA POWER API.
 2. Clean missing or invalid observations.
 3. Create a supervised dataset in which weather on day *t* predicts solar radiation on day *t+1*.
-4. Train a scikit-learn Linear Regression pipeline.
-5. Evaluate on a later chronological test period.
-6. Compare against a persistence baseline: tomorrow's solar radiation is estimated as today's observed value.
-7. Optionally use Open-Meteo forecast weather inputs for a live demonstration.
+4. Build lag, rolling-average, weather-change and seasonal features.
+5. Compare Linear Regression, Random Forest, Extra Trees and HistGradientBoosting.
+6. Select the model using four-fold time-series cross-validation on training data only.
+7. Evaluate once on a later chronological holdout and compare against persistence and seasonal-climatology baselines.
+8. Optionally use Open-Meteo forecast weather inputs for a live demonstration.
 
 ## Data sources
 
@@ -92,16 +93,16 @@ A short, metrics-aware recording script is available in [DEMO_SCRIPT.md](DEMO_SC
 
 The enhanced Google Colab benchmark used 2,557 daily NASA POWER calendar records (2019-01-01 to 2025-12-31). After creating next-calendar-day targets and removing rows without complete features, it produced 2,550 supervised observations: 2,040 training observations and 510 chronological held-out test observations. Four models were compared, with model selection based on four-fold `TimeSeriesSplit` cross-validation within the training period only. The final test period was kept separate from model selection.
 
-| Model | Training CV MAE | Held-out MAE | Held-out RMSE | Held-out R² |
+| Model | Training CV MAE | Held-out MAE | Held-out RMSE | Held-out R² | MAE improvement vs persistence | MAE improvement vs seasonal |
 |---|---:|---:|---:|---:|
-| Extra Trees | 0.4546 | **0.3779** | **0.5658** | **0.8053** |
-| Linear Regression | 0.4573 | 0.4025 | 0.5756 | 0.7985 |
-| Random Forest | 0.4697 | 0.3914 | 0.5814 | 0.7944 |
-| HistGradientBoosting | 0.5015 | 0.4021 | 0.5882 | 0.7896 |
+| Extra Trees | 0.4546 | **0.3779** | **0.5658** | **0.8053** | **7.69%** | **29.15%** |
+| Linear Regression | 0.4573 | 0.4025 | 0.5756 | 0.7985 | 1.69% | 24.54% |
+| Random Forest | 0.4697 | 0.3914 | 0.5814 | 0.7944 | 4.42% | 26.63% |
+| HistGradientBoosting | 0.5015 | 0.4021 | 0.5882 | 0.7896 | 1.79% | 24.62% |
 
-The selected Extra Trees model achieved a held-out MAE of **0.3779 kWh/m²/day**, RMSE of **0.5658 kWh/m²/day**, and R² of **0.8053**. The persistence baseline MAE was **0.4094 kWh/m²/day**, so Extra Trees reduced MAE by **7.69%** on this test period. These are historical, single-location benchmark results—not proof of operational forecast reliability.
+The selected Extra Trees model achieved a held-out MAE of **0.3779 kWh/m²/day**, RMSE of **0.5658 kWh/m²/day**, and R² of **0.8053**. The persistence baseline MAE was **0.4094**, while the seasonal-climatology baseline MAE was **0.5334 kWh/m²/day**. Extra Trees reduced MAE by **7.69% versus persistence** and **29.15% versus seasonal climatology** on this test period. These are historical, single-location benchmark results—not proof of operational forecast reliability.
 
-The enhanced outputs are available as [`results/solarsense_model_comparison.csv`](results/solarsense_model_comparison.csv), [`results/solarsense_enhanced_predictions.csv`](results/solarsense_enhanced_predictions.csv), and [`results/solarsense_enhanced_summary.csv`](results/solarsense_enhanced_summary.csv).
+The benchmark also reports seasonal-climatology MAE **0.5334 kWh/m²/day** and includes both baselines in the notebook's comparison and prediction exports. The exported CSV files in `results/` should be refreshed from the latest Colab run before final submission.
 
 ### Initial baseline experiment
 
