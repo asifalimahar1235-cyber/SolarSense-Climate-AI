@@ -69,7 +69,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-The dashboard downloads NASA POWER data on first run and caches a local CSV in `data/`.
+The dashboard downloads NASA POWER data on first run and caches a local CSV in `data/`. **Dashboard distinction:** this interactive app currently trains a separate Linear Regression model with a compact feature set. Its on-screen metrics are not the enhanced Extra Trees benchmark results below; the enhanced Colab notebook is the primary competition evaluation.
 
 ## Run tests
 
