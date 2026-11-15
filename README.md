@@ -36,7 +36,7 @@ Variables:
 - `ALLSKY_SFC_SW_DWN`: all-sky surface shortwave downward radiation (kWh/m²/day)
 - `T2M`: 2 m air temperature (°C)
 - `RH2M`: relative humidity at 2 m (%)
-- `CLD_AMT`: cloud amount (%)
+- `CLOUD_AMT`: cloud amount (NASA POWER community-specific units)
 
 ## Installation
 
