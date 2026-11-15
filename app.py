@@ -86,7 +86,7 @@ try:
         st.line_chart(climate[["temperature", "humidity", "cloud"]])
         st.caption(
             "NASA POWER variables: ALLSKY_SFC_SW_DWN (solar radiation), "
-            "T2M (2 m air temperature), RH2M (relative humidity), CLD_AMT (cloud amount)."
+            "T2M (2 m air temperature), RH2M (relative humidity), CLOUD_AMT (cloud amount)."
         )
         st.dataframe(climate.tail(10), use_container_width=True)
 
