@@ -11,7 +11,7 @@ Daily solar availability changes with weather and season. People exploring solar
 
 ## Our solution
 
-SolarSense is an experimental machine-learning prototype. It retrieves historical daily observations from NASA POWER, constructs a next-calendar-day prediction task, compares four scikit-learn regression models, and presents the project in a Streamlit dashboard. The enhanced Colab benchmark selects Extra Trees using time-series cross-validation on the training period and compares it with persistence and seasonal-climatology baselines. The Streamlit dashboard presents the saved enhanced Extra Trees benchmark, baseline comparisons, held-out predictions, error analysis, and NASA POWER data explorer. It reads the experiment outputs rather than training a separate competing model.
+SolarSense is an experimental machine-learning prototype. It retrieves historical daily observations from NASA POWER, constructs a next-calendar-day prediction task, compares four scikit-learn regression models, and presents the project in a Streamlit dashboard. The enhanced Colab benchmark selects Extra Trees using time-series cross-validation on the training period and compares it with persistence and seasonal-climatology baselines. The Streamlit dashboard presents the saved enhanced Extra Trees benchmark, baseline comparisons, held-out predictions, error analysis, and NASA POWER data explorer. A separate experimental tab refits the same Extra Trees configuration on all currently available labelled NASA POWER observations to estimate the day after the latest usable input date. This demonstration is distinct from the historical holdout evaluation and is not a validated operational forecast.
 
 The target is **daily solar radiation (kWh/m²/day)**, not household electricity generation.
 
@@ -47,7 +47,7 @@ The earlier Linear Regression notebook reported MAE 0.4079, RMSE 0.5947, R² 0.7
 
 ## Limitations and responsible use
 
-This is a small, single-location educational prototype, not a validated operational forecast. It uses a limited set of weather variables and a simple model. Missing data, cloud variability, spatial representativeness, and forecast-input quality can affect results. Historical test performance does not guarantee future accuracy. The Streamlit dashboard presents the same saved enhanced benchmark results reported above. It is an interactive research presentation, not a live operational forecasting service. Solar radiation is not equivalent to the electricity produced by a specific panel system.
+This is a small, single-location educational prototype, not a validated operational forecast. It uses a limited set of weather variables and a simple model. Missing data, cloud variability, spatial representativeness, and forecast-input quality can affect results. Historical test performance does not guarantee future accuracy. The dashboard presents the same saved enhanced benchmark results reported above. Its experimental next-available-day estimate uses refreshed NASA POWER observations, but may forecast a date several days behind today because the source data can lag. It is not a validated operational forecasting service. Solar radiation is not equivalent to the electricity produced by a specific panel system.
 
 ## Tools and acknowledgements
 
