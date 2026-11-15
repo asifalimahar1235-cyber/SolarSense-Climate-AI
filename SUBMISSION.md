@@ -23,23 +23,23 @@ The target is **daily solar radiation (kWh/m²/day)**, not household electricity
 - **Prediction task:** observations on calendar day *t* are used to estimate solar radiation on calendar day *t+1*.
 - **Models:** Linear Regression, Random Forest, Extra Trees, and HistGradientBoosting.
 - **Model selection:** four-fold `TimeSeriesSplit` cross-validation using training-period data only.
-- **Baseline:** persistence (tomorrow = today's observed solar radiation).
-- **Evaluation:** chronological 80% training / 20% held-out test split; MAE, RMSE, and R² for each model, plus MAE for the baseline. No random shuffling.
+- **Baselines:** persistence (tomorrow = today's observed solar radiation) and seasonal climatology (training-period mean target for the same day of year).
+- **Evaluation:** chronological 80% training / 20% held-out test split; four-fold time-series cross-validation within the training period only; MAE, RMSE, and R² for each model. Both baselines are evaluated on the same held-out dates. No random shuffling.
 
 ## Results — enhanced Colab benchmark
 
 The enhanced notebook was executed successfully using 2,557 NASA POWER daily calendar records from 2019-01-01 to 2025-12-31. It generated 2,550 supervised next-calendar-day observations: 2,040 training observations and 510 held-out test observations. The held-out target dates run from 2024-08-09 to 2025-12-31.
 
-| Model | Training CV MAE | Held-out MAE | Held-out RMSE | Held-out R² |
+| Model | Training CV MAE | Held-out MAE | Held-out RMSE | Held-out R² | MAE improvement vs persistence | MAE improvement vs seasonal |
 |---|---:|---:|---:|---:|
-| **Extra Trees** | **0.4546** | **0.3779** | **0.5658** | **0.8053** |
-| Linear Regression | 0.4573 | 0.4025 | 0.5756 | 0.7985 |
-| Random Forest | 0.4697 | 0.3914 | 0.5814 | 0.7944 |
-| HistGradientBoosting | 0.5015 | 0.4021 | 0.5882 | 0.7896 |
+| **Extra Trees** | **0.4546** | **0.3779** | **0.5658** | **0.8053** | **7.69%** | **29.15%** |
+| Linear Regression | 0.4573 | 0.4025 | 0.5756 | 0.7985 | 1.69% | 24.54% |
+| Random Forest | 0.4697 | 0.3914 | 0.5814 | 0.7944 | 4.42% | 26.63% |
+| HistGradientBoosting | 0.5015 | 0.4021 | 0.5882 | 0.7896 | 1.79% | 24.62% |
 
-The Extra Trees model was selected using training-period cross-validation and achieved held-out MAE **0.3779 kWh/m²/day**, RMSE **0.5658 kWh/m²/day**, and R² **0.8053**. The persistence baseline MAE was **0.4094 kWh/m²/day**. This is a **7.69% MAE reduction** relative to persistence on the held-out period.
+The Extra Trees model was selected using training-period cross-validation and achieved held-out MAE **0.3779 kWh/m²/day**, RMSE **0.5658 kWh/m²/day**, and R² **0.8053**. The persistence baseline MAE was **0.4094 kWh/m²/day**, while the seasonal-climatology baseline MAE was **0.5334 kWh/m²/day**. This is a **7.69% MAE reduction** relative to persistence and a **29.15% reduction** relative to seasonal climatology on the held-out period.
 
-**Interpretation:** The benchmark indicates that Extra Trees performed better than the persistence baseline on this historical holdout. The result is promising but limited to one location and one historical test period; it does not establish that the model is reliable in live operation or in other locations. The largest-error cases are retained in the notebook for error analysis. Exported comparison, prediction and summary files are in the repository's [`results/`](results/) folder.
+**Interpretation:** The benchmark indicates that Extra Trees performed better than both the persistence and seasonal-climatology baselines on this historical holdout. The result is promising but limited to one location and one historical test period; it does not establish that the model is reliable in live operation or in other locations. The largest-error cases are retained in the notebook for error analysis. Exported comparison, prediction and summary files are in the repository's [`results/`](results/) folder.
 
 ### Initial experiment
 
