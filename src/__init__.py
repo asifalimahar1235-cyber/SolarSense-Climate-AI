@@ -1,0 +1,1 @@
+"""SolarSense climate forecasting package."""
