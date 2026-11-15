@@ -10,12 +10,12 @@ import requests
 LATITUDE = 28.0167
 LONGITUDE = 69.3167
 NASA_URL = "https://power.larc.nasa.gov/api/temporal/daily/point"
-PARAMETERS = ["ALLSKY_SFC_SW_DWN", "T2M", "RH2M", "CLD_AMT"]
+PARAMETERS = ["ALLSKY_SFC_SW_DWN", "T2M", "RH2M", "CLOUD_AMT"]
 COLUMN_MAP = {
     "ALLSKY_SFC_SW_DWN": "solar",
     "T2M": "temperature",
     "RH2M": "humidity",
-    "CLD_AMT": "cloud",
+    "CLOUD_AMT": "cloud",
 }
 
 
@@ -37,7 +37,7 @@ def fetch_nasa_power(
 
     params = {
         "parameters": ",".join(PARAMETERS),
-        "community": "RE",
+        "community": "AG",
         "longitude": longitude,
         "latitude": latitude,
         "start": start,
