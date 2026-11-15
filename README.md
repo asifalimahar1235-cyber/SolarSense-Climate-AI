@@ -84,20 +84,30 @@ An additional notebook, [SolarSense_Enhanced_Benchmark.ipynb](SolarSense_Enhance
 
 A short, metrics-aware recording script is available in [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
 
-**Important:** This enhanced benchmark has been added but its outputs have not yet been run and verified. Do not treat its future results as measured until the notebook completes successfully. The existing metrics below are from the original Linear Regression experiment.
+**Execution status:** The enhanced benchmark notebook was executed successfully in Google Colab. Its exported comparison, prediction and summary CSV files are stored in the [`results/`](results/) folder. The measured enhanced results are reported below.
 
 ## Evaluation and results
 
-The Google Colab notebook `SolarSense_Veritas_AI_Hackathon_2026.ipynb` was executed successfully using 2,557 NASA POWER daily records and a chronological 80% / 20% split (512 held-out observations).
+### Enhanced benchmark (primary result)
 
-The recorded held-out results are:
-- Linear Regression MAE: **0.4079 kWh/m²/day**
-- Linear Regression RMSE: **0.5947 kWh/m²/day**
-- Linear Regression R²: **0.7872**
-- Persistence baseline MAE: **0.4083 kWh/m²/day**
-- MAE improvement over baseline: **0.10%**
+The enhanced Google Colab benchmark used 2,557 daily NASA POWER calendar records (2019-01-01 to 2025-12-31). After creating next-calendar-day targets and removing rows without complete features, it produced 2,550 supervised observations: 2,040 training observations and 510 chronological held-out test observations. Four models were compared, with model selection based on four-fold `TimeSeriesSplit` cross-validation within the training period only. The final test period was kept separate from model selection.
 
-The improvement over the persistence baseline is extremely small and should not be interpreted as a meaningful practical advantage. The R² value describes this test set only; it does not establish operational forecasting reliability. The prediction results are included in [solarsense_results.csv](solarsense_results.csv), and the full write-up is in [SUBMISSION.md](SUBMISSION.md).
+| Model | Training CV MAE | Held-out MAE | Held-out RMSE | Held-out R² |
+|---|---:|---:|---:|---:|
+| Extra Trees | 0.4546 | **0.3779** | **0.5658** | **0.8053** |
+| Linear Regression | 0.4573 | 0.4025 | 0.5756 | 0.7985 |
+| Random Forest | 0.4697 | 0.3914 | 0.5814 | 0.7944 |
+| HistGradientBoosting | 0.5015 | 0.4021 | 0.5882 | 0.7896 |
+
+The selected Extra Trees model achieved a held-out MAE of **0.3779 kWh/m²/day**, RMSE of **0.5658 kWh/m²/day**, and R² of **0.8053**. The persistence baseline MAE was **0.4094 kWh/m²/day**, so Extra Trees reduced MAE by **7.69%** on this test period. These are historical, single-location benchmark results—not proof of operational forecast reliability.
+
+The enhanced outputs are available as [`results/solarsense_model_comparison.csv`](results/solarsense_model_comparison.csv), [`results/solarsense_enhanced_predictions.csv`](results/solarsense_enhanced_predictions.csv), and [`results/solarsense_enhanced_summary.csv`](results/solarsense_enhanced_summary.csv).
+
+### Initial baseline experiment
+
+The original `SolarSense_Veritas_AI_Hackathon_2026.ipynb` also reported a chronological holdout result: Linear Regression MAE **0.4079**, RMSE **0.5947**, R² **0.7872**, and persistence MAE **0.4083 kWh/m²/day** (0.10% MAE improvement). This is retained as an initial experiment; the enhanced benchmark above is the primary result. The original prediction output is in [solarsense_results.csv](solarsense_results.csv).
+
+The full project write-up is in [SUBMISSION.md](SUBMISSION.md).
 
 **Verification note:** The Colab experiment was run. The Streamlit dashboard and automated test suite have not been independently verified as running successfully.
 
