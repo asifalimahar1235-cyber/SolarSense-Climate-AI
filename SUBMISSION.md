@@ -19,26 +19,26 @@ The target is **daily solar radiation (kWh/m²/day)**, not household electricity
 
 - **Historical source:** NASA POWER daily point API, at 28.0167° N, 69.3167° E.
 - **Variables:** all-sky surface shortwave downward radiation (`ALLSKY_SFC_SW_DWN`), 2 m air temperature (`T2M`), relative humidity (`RH2M`), and cloud amount (`CLOUD_AMT`).
-- **Features:** daily temperature, humidity, cloud amount, and sine/cosine seasonal features for the target date.
-- **Prediction task:** weather on day *t* predicts solar radiation on day *t+1*.
-- **Model:** median imputation, standardization, and Linear Regression.
+- **Features:** same-day solar radiation, temperature, relative humidity, cloud amount, and sine/cosine seasonal features.
+- **Prediction task:** observations on day *t* are used to estimate solar radiation on the next recorded day (*t+1*).
+- **Model:** scikit-learn Linear Regression.
 - **Baseline:** persistence (tomorrow = today's observed solar radiation).
 - **Evaluation:** chronological 80% training / 20% held-out test split; MAE, RMSE, and R² for the model, plus MAE for the baseline. No random shuffling.
 
-## Results — complete after running the project
+## Results — Colab experiment
 
-Do not submit estimated or invented values. Copy the actual metrics shown in the dashboard after a successful run.
+The following values were reported by the project's successful Google Colab run using 2,557 NASA POWER daily records and a chronological 80% / 20% split.
 
-| Held-out test metric | Actual result |
+| Held-out test metric | Observed result |
 |---|---:|
-| Number of test observations | **[FILL IN]** |
-| Model MAE (kWh/m²/day) | **[FILL IN]** |
-| Model RMSE (kWh/m²/day) | **[FILL IN]** |
-| Model R² | **[FILL IN]** |
-| Persistence baseline MAE (kWh/m²/day) | **[FILL IN]** |
-| MAE improvement vs baseline (%) | **[FILL IN]** |
+| Number of test observations | **512** |
+| Model MAE (kWh/m²/day) | **0.4079** |
+| Model RMSE (kWh/m²/day) | **0.5947** |
+| Model R² | **0.7872** |
+| Persistence baseline MAE (kWh/m²/day) | **0.4083** |
+| MAE improvement vs baseline | **0.10%** |
 
-**Interpretation:** State honestly whether SolarSense beats the persistence baseline on the held-out test period. Include one example or pattern from the largest-error table.
+**Interpretation:** Linear Regression marginally outperformed the persistence baseline by 0.10% MAE on this held-out period. The difference is very small, so these results do not demonstrate a meaningful practical advantage over the simple baseline. The R² score indicates that the model explains 78.72% of the variation in the held-out target values, but this alone does not establish operational forecast reliability.
 
 ## Limitations and responsible use
 
@@ -50,8 +50,8 @@ NASA POWER provides the historical data; Open-Meteo provides optional forecast w
 
 ## Final submission details — complete before submitting
 
-- **Author/team member name(s):** [FILL IN]
-- **School:** [FILL IN]
-- **Contact email(s):** [FILL IN]
+- **Author/team member name(s):** Asif Ali (individual project)
+- **School:** Islamia Public Higher Secondary School, Ghotki, Pakistan
+- **Contact email(s):** asifali.academic@gmail.com
 - **Demo/video link (if required):** [FILL IN]
 - **GitHub repository:** https://github.com/asifalimahar1235-cyber/SolarSense-Climate-AI
