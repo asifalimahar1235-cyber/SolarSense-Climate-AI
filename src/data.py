@@ -37,7 +37,7 @@ def fetch_nasa_power(
 
     params = {
         "parameters": ",".join(PARAMETERS),
-        "community": "AG",
+        "community": "RE",
         "longitude": longitude,
         "latitude": latitude,
         "start": start,
