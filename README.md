@@ -104,7 +104,7 @@ The dashboard presents the published enhanced Extra Trees benchmark, its two bas
 ## Run tests
 
 ```bash
-pytest -q
+python -m pytest -q
 ```
 
 ## Enhanced model benchmark
