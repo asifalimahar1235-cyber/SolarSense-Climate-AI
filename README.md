@@ -78,9 +78,18 @@ pytest -q
 
 ## Evaluation and results
 
-The dashboard calculates MAE, RMSE and R² on the latest 20% of the supervised observations, held out in chronological order. It also reports persistence-baseline MAE and the model's relative MAE improvement or deterioration.
+The Google Colab notebook `SolarSense_Veritas_AI_Hackathon_2026.ipynb` was executed successfully using 2,557 NASA POWER daily records and a chronological 80% / 20% split (512 held-out observations).
 
-**No performance results are claimed in this README.** Run the project and record the actual outputs before making any accuracy claims.
+The recorded held-out results are:
+- Linear Regression MAE: **0.4079 kWh/m²/day**
+- Linear Regression RMSE: **0.5947 kWh/m²/day**
+- Linear Regression R²: **0.7872**
+- Persistence baseline MAE: **0.4083 kWh/m²/day**
+- MAE improvement over baseline: **0.10%**
+
+The improvement over the persistence baseline is extremely small and should not be interpreted as a meaningful practical advantage. The R² value describes this test set only; it does not establish operational forecasting reliability. The prediction results are included in [solarsense_results.csv](solarsense_results.csv), and the full write-up is in [SUBMISSION.md](SUBMISSION.md).
+
+**Verification note:** The Colab experiment was run. The Streamlit dashboard and automated test suite have not been independently verified as running successfully.
 
 ## Limitations
 
@@ -96,7 +105,7 @@ AI assistance was used during development, including GitHub Copilot and ChatGPT.
 
 ## Hackathon submission
 
-See [SUBMISSION.md](SUBMISSION.md) for the project write-up and the final results/details checklist. Fill in the actual held-out test metrics after running the dashboard; do not report unmeasured results.
+See [SUBMISSION.md](SUBMISSION.md) for the project write-up, experiment results, limitations and AI-assistance disclosure.
 
 ## Competition context
 
