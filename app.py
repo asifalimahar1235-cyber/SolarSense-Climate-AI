@@ -49,7 +49,8 @@ try:
     failures = error_table(test, predictions)
 
     st.success(
-        f"Loaded {len(climate):,} complete daily records "
+        f"Loaded {len(climate):,} calendar days, including "
+        f"{len(climate.dropna()):,} complete daily observations, "
         f"from {climate.index.min().date()} to {climate.index.max().date()}."
     )
 
