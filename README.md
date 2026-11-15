@@ -10,6 +10,11 @@ SolarSense is an experimental climate-AI prototype that estimates next-day daily
 
 Solar availability changes with weather and season. Households and schools in the Ghotki area may find local estimates useful when thinking about energy planning. This project investigates whether daily weather observations and seasonal features can support a next-day estimate.
 
+## Project information
+
+- **School:** IBA-Islamia Public Higher Secondary School, Ghotki, Pakistan
+- **Competition:** Veritas AI International High School Hackathon 2026 — Climate Track
+
 ## Location
 
 - Latitude: 28.0167
