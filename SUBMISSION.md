@@ -11,7 +11,7 @@ Daily solar availability changes with weather and season. People exploring solar
 
 ## Our solution
 
-SolarSense is an experimental machine-learning prototype. It retrieves historical daily observations from NASA POWER, constructs a next-calendar-day prediction task, compares four scikit-learn regression models, and presents the project in a Streamlit dashboard. The enhanced benchmark selects a model using time-series cross-validation on the training period and compares it with a persistence baseline that predicts tomorrow's solar radiation using today's observed value.
+SolarSense is an experimental machine-learning prototype. It retrieves historical daily observations from NASA POWER, constructs a next-calendar-day prediction task, compares four scikit-learn regression models, and presents the project in a Streamlit dashboard. The enhanced Colab benchmark selects Extra Trees using time-series cross-validation on the training period and compares it with persistence and seasonal-climatology baselines. The Streamlit dashboard is a separate interactive prototype that currently trains Linear Regression with a smaller feature set; its dynamic metrics and optional Open-Meteo demonstration are not the primary benchmark.
 
 The target is **daily solar radiation (kWh/m²/day)**, not household electricity generation.
 
@@ -31,7 +31,7 @@ The target is **daily solar radiation (kWh/m²/day)**, not household electricity
 The enhanced notebook was executed successfully using 2,557 NASA POWER daily calendar records from 2019-01-01 to 2025-12-31. It generated 2,550 supervised next-calendar-day observations: 2,040 training observations and 510 held-out test observations. The held-out target dates run from 2024-08-09 to 2025-12-31.
 
 | Model | Training CV MAE | Held-out MAE | Held-out RMSE | Held-out R² | MAE improvement vs persistence | MAE improvement vs seasonal |
-|---|---:|---:|---:|---:|
+|---|---:|---:|---:|---:|---:|---:|
 | **Extra Trees** | **0.4546** | **0.3779** | **0.5658** | **0.8053** | **7.69%** | **29.15%** |
 | Linear Regression | 0.4573 | 0.4025 | 0.5756 | 0.7985 | 1.69% | 24.54% |
 | Random Forest | 0.4697 | 0.3914 | 0.5814 | 0.7944 | 4.42% | 26.63% |
@@ -47,7 +47,7 @@ The earlier Linear Regression notebook reported MAE 0.4079, RMSE 0.5947, R² 0.7
 
 ## Limitations and responsible use
 
-This is a small, single-location educational prototype, not a validated operational forecast. It uses a limited set of weather variables and a simple model. Missing data, cloud variability, spatial representativeness, and forecast-input quality can affect results. Historical test performance does not guarantee future accuracy. The optional Open-Meteo demonstration is separate from the historical held-out evaluation and should not be described as validated forecast performance. Solar radiation is not equivalent to the electricity produced by a specific panel system.
+This is a small, single-location educational prototype, not a validated operational forecast. It uses a limited set of weather variables and a simple model. Missing data, cloud variability, spatial representativeness, and forecast-input quality can affect results. Historical test performance does not guarantee future accuracy. The Streamlit dashboard is a separate Linear Regression prototype and does not reproduce the enhanced notebook's Extra Trees benchmark. Its optional Open-Meteo demonstration is also separate from the historical held-out evaluation and should not be described as validated forecast performance. Solar radiation is not equivalent to the electricity produced by a specific panel system.
 
 ## Tools and acknowledgements
 
