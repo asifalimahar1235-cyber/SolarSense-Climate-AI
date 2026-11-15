@@ -51,7 +51,7 @@ This is a small, single-location educational prototype, not a validated operatio
 
 ## Tools and acknowledgements
 
-NASA POWER provides the historical data; Open-Meteo provides optional forecast weather inputs; scikit-learn, pandas, Streamlit, and Matplotlib support the implementation and dashboard. AI coding assistance (GitHub Copilot and ChatGPT) was used during development, including code drafting, debugging, and documentation. The project author ran the enhanced notebook in Google Colab and reviewed the resulting outputs.
+NASA POWER provides the historical data; scikit-learn, pandas, NumPy, Streamlit, and Matplotlib support the experiment and dashboard. AI coding assistance (GitHub Copilot and ChatGPT) was used during development, including code drafting, debugging, and documentation. The project author ran the enhanced notebook in Google Colab and reviewed the resulting outputs.
 
 ## Final submission details — complete before submitting
 
