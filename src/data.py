@@ -26,7 +26,12 @@ def fetch_nasa_power(
     longitude: float = LONGITUDE,
     timeout: int = 120,
 ) -> pd.DataFrame:
-    """Fetch daily NASA POWER data. Dates must be YYYYMMDD."""
+    """Fetch daily NASA POWER data. Dates must be YYYYMMDD.
+
+    Missing observations are retained as NaN on a complete daily index. This is
+    important: dropping missing dates before target shifting could accidentally
+    turn a multi-day gap into a false next-day training example.
+    """
     if end is None:
         end = (datetime.now(timezone.utc).date() - timedelta(days=7)).strftime("%Y%m%d")
 
@@ -60,17 +65,21 @@ def fetch_nasa_power(
     frame = frame.apply(pd.to_numeric, errors="coerce").replace(-999, float("nan"))
     frame = frame.sort_index()
     frame = frame[~frame.index.isna()]
-    frame = frame.dropna()
 
     if frame.empty:
-        raise ValueError("NASA POWER returned no complete observations for the requested period.")
-    if (frame["solar"] < 0).any():
+        raise ValueError("NASA POWER returned no observations for the requested period.")
+
+    frame = frame[~frame.index.duplicated(keep="last")]
+    frame = frame.asfreq("D")
+
+    valid_solar = frame["solar"].dropna()
+    if (valid_solar < 0).any():
         raise ValueError("Solar radiation contains negative values after missing-data cleaning.")
     return frame
 
 
 def save_dataset(frame: pd.DataFrame, path: str = "data/ghotki_nasa_power.csv") -> str:
-    """Save cleaned observations to CSV, creating the parent directory."""
+    """Save daily observations to CSV, creating the parent directory."""
     from pathlib import Path
 
     destination = Path(path)
