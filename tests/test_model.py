@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
+from sklearn.metrics import mean_absolute_error
 
 from src.features import FEATURES, make_supervised, chronological_split
 from src.model import train_model
