@@ -81,11 +81,12 @@ def load_climate() -> pd.DataFrame:
     if DATA_PATH.exists():
         try:
             cached = pd.read_csv(DATA_PATH, parse_dates=["date"], index_col="date")
-            recent_enough = cached.index.max().date() >= (
-                pd.Timestamp.now(tz="UTC").date() - timedelta(days=10)
-            )
-            if not cached.empty and recent_enough:
-                return cached
+            if not cached.empty:
+                recent_enough = cached.index.max().date() >= (
+                    pd.Timestamp.now(tz="UTC").date() - timedelta(days=10)
+                )
+                if recent_enough:
+                    return cached
         except Exception:
             pass
     frame = fetch_nasa_power(start="20190101")
