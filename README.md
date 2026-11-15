@@ -43,7 +43,7 @@ flowchart TD
     I --> J["Error analysis and documented limitations"]
 ```
 
-The enhanced notebook is the reproducible research benchmark. The Streamlit dashboard presents the same saved benchmark results, held-out predictions, error analysis and NASA POWER data explorer.
+The enhanced notebook is the reproducible research benchmark. The Streamlit dashboard presents the saved benchmark results, held-out predictions, error analysis and NASA POWER data explorer. It also includes a separately labelled experimental estimate for the day after the latest usable NASA POWER observation.
 
 ## Project structure
 
@@ -98,7 +98,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-The dashboard presents the published enhanced Extra Trees benchmark, its two baselines, held-out predictions, error analysis, and NASA POWER data explorer. It reads the saved experiment outputs in `results/`; it does not silently train a different model or replace the notebook's evaluation. NASA POWER observations are downloaded on first run and cached in `data/`.
+The dashboard presents the published enhanced Extra Trees benchmark, its two baselines, held-out predictions, error analysis, and NASA POWER data explorer. A separate experimental tab refits the benchmark's Extra Trees configuration on all available labelled observations and estimates the day after the latest usable input date. This current-data estimate is not the historical test result or a validated operational forecast. NASA POWER observations are refreshed when the local cache is more than 10 days behind and cached in `data/`.
 
 ## Run tests
 
@@ -144,6 +144,7 @@ The full project write-up is in [SUBMISSION.md](SUBMISSION.md).
 ## Limitations
 
 - This is an experimental educational prototype, not an operational forecasting service.
+- The dashboard's next-available-day estimate is a research demonstration. NASA POWER data can lag behind the current date, and the estimate should not be used as an operational energy decision.
 - The model uses a limited set of daily variables and a simple regression method.
 - Historical test performance does not guarantee future performance.
 - The repository contains an experimental Open-Meteo forecasting helper, but it is not used by the active dashboard or the reported benchmark.
