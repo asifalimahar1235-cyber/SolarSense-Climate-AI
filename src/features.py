@@ -30,7 +30,7 @@ def make_supervised(frame: pd.DataFrame) -> pd.DataFrame:
         data = data.asfreq("D")
 
     target_dates = data.index + pd.Timedelta(days=1)
-    day_number = target_dates.dayofyear
+    day_number = target_dates.day_of_year
 
     supervised = pd.DataFrame(index=data.index)
     supervised["temperature"] = data["temperature"]
