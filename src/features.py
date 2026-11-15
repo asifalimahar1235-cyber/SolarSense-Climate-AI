@@ -8,10 +8,11 @@ FEATURES = ["temperature", "humidity", "cloud", "day_sin", "day_cos"]
 
 
 def make_supervised(frame: pd.DataFrame) -> pd.DataFrame:
-    """Use weather on day t to predict solar radiation on day t+1.
+    """Use weather on calendar day t to predict solar radiation on day t+1.
 
-    Seasonal features represent the target day (t+1), which is known in advance.
-    The persistence baseline uses observed solar radiation on day t.
+    The input frame must retain missing calendar days as NaN rows. Shifting
+    before dropping incomplete rows ensures gaps cannot become false
+    next-calendar-day examples.
     """
     required = {"solar", "temperature", "humidity", "cloud"}
     missing = required.difference(frame.columns)
@@ -19,6 +20,15 @@ def make_supervised(frame: pd.DataFrame) -> pd.DataFrame:
         raise ValueError(f"Input data is missing required columns: {sorted(missing)}")
 
     data = frame.copy().sort_index()
+    if not isinstance(data.index, pd.DatetimeIndex):
+        raise ValueError("Input data must use a DatetimeIndex.")
+    if data.index.has_duplicates:
+        raise ValueError("Input dates must be unique.")
+
+    # Reindex to a complete calendar so a missing date remains a missing row.
+    if len(data.index) > 1:
+        data = data.asfreq("D")
+
     target_dates = data.index + pd.Timedelta(days=1)
     day_number = target_dates.dayofyear
 
