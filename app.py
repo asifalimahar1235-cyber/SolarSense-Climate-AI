@@ -23,6 +23,11 @@ st.info(
     "SolarSense predicts daily solar radiation (kWh/m²/day). It does not directly "
     "predict household electricity generation or guarantee real-world output."
 )
+st.warning(
+    "Dashboard model note: this app trains a separate Linear Regression model. "
+    "Its metrics are not the enhanced Extra Trees benchmark reported in the project write-up. "
+    "The enhanced Colab notebook is the primary competition evaluation."
+)
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def load_data():
@@ -91,7 +96,7 @@ try:
         st.dataframe(climate.tail(10), use_container_width=True)
 
     with tab_model:
-        st.markdown("### Held-out chronological test performance")
+        st.markdown("### Dashboard Linear Regression — separate chronological holdout")
         m1, m2, m3 = st.columns(3)
         m1.metric("Model MAE", f'{metrics["model_mae"]:.3f} kWh/m²/day')
         m2.metric("Model RMSE", f'{metrics["model_rmse"]:.3f} kWh/m²/day')
@@ -111,8 +116,8 @@ try:
         )
         st.line_chart(plot_frame.tail(120))
         st.caption(
-            "The final 20% of supervised observations are held out in chronological order. "
-            "Metrics are computed only on this test segment."
+            "The final 20% of this dashboard run’s supervised observations are held out in chronological order. "
+            "These dynamically refreshed dashboard metrics are separate from the fixed enhanced Colab benchmark."
         )
 
     with tab_errors:
@@ -135,9 +140,9 @@ try:
     with tab_forecast:
         st.markdown("### Optional next-day demonstration")
         st.write(
-            "Open-Meteo forecast weather inputs are passed into the model trained on NASA POWER "
-            "historical observations. This is an experimental demonstration, not a verified "
-            "operational forecast."
+            "Open-Meteo forecast weather inputs are passed into the dashboard’s separate Linear Regression "
+            "model trained on NASA POWER historical observations. This is an experimental demonstration, "
+            "not the enhanced Extra Trees model and not a verified operational forecast."
         )
         if st.button("Generate next-day estimate", type="primary"):
             try:
@@ -160,7 +165,7 @@ try:
             "- Baseline: tomorrow equals today's observed solar radiation.\n"
             "- Split: chronological 80% training / 20% test.\n\n"
             "### Limitations\n"
-            "- A single location and one simple model are evaluated.\n"
+            "- This dashboard uses a separate Linear Regression baseline implementation; it is not the enhanced Extra Trees benchmark.\n"
             "- The model uses a small set of daily weather variables.\n"
             "- Forecast-input quality and historical-data consistency affect results.\n"
             "- Predicted solar radiation is not the same as panel electricity output.\n"
