@@ -1,0 +1,2 @@
+selected_model,training_observations,test_observations,test_mae,test_rmse,test_r2,persistence_mae,persistence_rmse,mae_improvement_vs_persistence_percent,test_start,test_end_input_date
+Extra Trees,2040,510,0.37794595360285294,0.5658007273967681,0.8053259701985541,0.40944117647058825,0.6238111128457107,7.692246085072917,2024-08-08,2025-12-30
