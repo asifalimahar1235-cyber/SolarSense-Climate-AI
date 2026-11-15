@@ -76,6 +76,14 @@ The dashboard downloads NASA POWER data on first run and caches a local CSV in `
 pytest -q
 ```
 
+## Enhanced model benchmark
+
+An additional notebook, [SolarSense_Enhanced_Benchmark.ipynb](SolarSense_Enhanced_Benchmark.ipynb), compares Linear Regression, Random Forest, Extra Trees and HistGradientBoosting. It adds short-term solar lags and rolling features, preserves missing calendar days, uses four-fold time-series cross-validation on the training period for model selection, and evaluates on a separate later 20% holdout.
+
+[Open the enhanced benchmark in Google Colab](https://colab.research.google.com/github/asifalimahar1235-cyber/SolarSense-Climate-AI/blob/main/SolarSense_Enhanced_Benchmark.ipynb).
+
+**Important:** This enhanced benchmark has been added but its outputs have not yet been run and verified. Do not treat its future results as measured until the notebook completes successfully. The existing metrics below are from the original Linear Regression experiment.
+
 ## Evaluation and results
 
 The Google Colab notebook `SolarSense_Veritas_AI_Hackathon_2026.ipynb` was executed successfully using 2,557 NASA POWER daily records and a chronological 80% / 20% split (512 held-out observations).
