@@ -56,7 +56,6 @@ NASA POWER provides the historical data; Open-Meteo provides optional forecast w
 ## Final submission details — complete before submitting
 
 - **Author/team member name(s):** Asif Ali (individual project)
-- **School:** Islamia Public Higher Secondary School, Ghotki, Pakistan
+- **School:** IBA-Islamia Public Higher Secondary School, Ghotki, Pakistan
 - **Contact email(s):** asifali.academic@gmail.com
-- **Demo/video link (if required):** [FILL IN]
 - **GitHub repository:** https://github.com/asifalimahar1235-cyber/SolarSense-Climate-AI
