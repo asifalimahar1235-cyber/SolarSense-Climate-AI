@@ -17,7 +17,45 @@ st.set_page_config(page_title="SolarSense | Ghotki", page_icon="☀️", layout=
 
 st.title("☀️ SolarSense")
 st.subheader("Local AI for Next-Day Solar Radiation Forecasting")
+
 st.caption("Climate Track · Ghotki, Sindh, Pakistan · Experimental educational prototype")
+
+st.markdown("""
+<style>
+[data-testid="stAppViewContainer"] {
+ background: radial-gradient(ellipse at 8% 0%, rgba(8,126,120,.10), transparent 34%),
+ linear-gradient(180deg, #f7fbfa 0%, #f2f7f6 100%);
+}
+[data-testid="stHeader"] { background: rgba(247,251,250,.82); }
+.block-container { max-width: 1180px; padding-top: 2rem; padding-bottom: 3rem; }
+h1,h2,h3 { color:#102b35; letter-spacing:-.025em; }
+h1 { font-weight:800; }
+[data-testid="stMetric"] { background:rgba(255,255,255,.9); border:1px solid #dce9e6;
+ padding:1rem 1.1rem; border-radius:16px; box-shadow:0 5px 18px rgba(16,43,53,.045); }
+[data-testid="stMetricLabel"] { color:#607780; font-weight:600; }
+[data-testid="stMetricValue"] { color:#102b35; }
+.stTabs [data-baseweb="tab-list"] { gap:.4rem; }
+.stTabs [data-baseweb="tab"] { border-radius:10px 10px 0 0; padding:.65rem 1rem; }
+div[data-testid="stAlert"] { border-radius:12px; }
+div[data-testid="stDataFrame"] { border:1px solid #dce9e6; border-radius:12px; overflow:hidden; }
+.ss-hero { background:linear-gradient(115deg,#103c46 0%,#087e78 70%,#20a18f 100%);
+ padding:1.7rem 1.8rem; border-radius:20px; color:white; margin:.6rem 0 1.3rem;
+ box-shadow:0 12px 30px rgba(8,80,78,.16); }
+.ss-hero h2 { color:white; margin:0 0 .35rem; font-size:1.55rem; }
+.ss-hero p { color:rgba(255,255,255,.88); margin:0; font-size:.98rem; }
+.ss-kicker { color:#bce9df; text-transform:uppercase; letter-spacing:.14em;
+ font-size:.72rem; font-weight:800; margin-bottom:.5rem; }
+.ss-section { color:#087e78; text-transform:uppercase; font-size:.72rem;
+ font-weight:800; letter-spacing:.13em; margin-bottom:.35rem; }
+.ss-foot { border-top:1px solid #dce9e6; padding-top:1rem; margin-top:2rem;
+ color:#6a8087; font-size:.82rem; }
+</style>
+<div class="ss-hero">
+ <div class="ss-kicker">Climate intelligence · Pakistan</div>
+ <h2>Turning local climate data into clearer solar insight.</h2>
+ <p>An experimental, evidence-led study of next-day solar radiation in Ghotki, Sindh.</p>
+</div>
+""", unsafe_allow_html=True)
 
 st.info(
     "SolarSense predicts daily solar radiation (kWh/m²/day). It does not directly "
@@ -78,7 +116,7 @@ try:
         c3.metric("Test observations", f"{len(test):,}")
 
     with tab_data:
-        st.markdown("### Historical solar radiation")
+        st.markdown("<div class=\"ss-section\">Local observation record</div>", unsafe_allow_html=True)\n        st.markdown("### Historical solar radiation")
         fig, ax = plt.subplots(figsize=(12, 4))
         ax.plot(climate.index, climate["solar"], linewidth=0.7)
         ax.set_ylabel("kWh/m²/day")
@@ -96,7 +134,7 @@ try:
         st.dataframe(climate.tail(10), use_container_width=True)
 
     with tab_model:
-        st.markdown("### Dashboard Linear Regression — separate chronological holdout")
+        st.markdown("<div class=\"ss-section\">Model evaluation</div>", unsafe_allow_html=True)\n        st.markdown("### Dashboard Linear Regression — separate chronological holdout")
         m1, m2, m3 = st.columns(3)
         m1.metric("Model MAE", f'{metrics["model_mae"]:.3f} kWh/m²/day')
         m2.metric("Model RMSE", f'{metrics["model_rmse"]:.3f} kWh/m²/day')
@@ -121,7 +159,7 @@ try:
         )
 
     with tab_errors:
-        st.markdown("### Five largest absolute prediction errors")
+        st.markdown("<div class=\"ss-section\">Where the model struggles</div>", unsafe_allow_html=True)\n        st.markdown("### Five largest absolute prediction errors")
         st.dataframe(failures.head(5), use_container_width=True)
         residuals = test["target"].to_numpy() - predictions
         fig, ax = plt.subplots(figsize=(9, 4))
@@ -138,7 +176,7 @@ try:
         )
 
     with tab_forecast:
-        st.markdown("### Optional next-day demonstration")
+        st.markdown("<div class=\"ss-section\">Interactive experiment</div>", unsafe_allow_html=True)\n        st.markdown("### Optional next-day demonstration")
         st.write(
             "Open-Meteo forecast weather inputs are passed into the dashboard’s separate Linear Regression "
             "model trained on NASA POWER historical observations. This is an experimental demonstration, "
@@ -182,3 +220,5 @@ try:
 except Exception as exc:
     st.error(f"SolarSense could not start: {exc}")
     st.info("Check the internet connection and NASA POWER API availability, then try again.")
+
+st.markdown('<div class="ss-foot">SOLARSENSE · Ghotki, Sindh, Pakistan · Educational research prototype · Results are historical and not an operational guarantee.</div>', unsafe_allow_html=True)
