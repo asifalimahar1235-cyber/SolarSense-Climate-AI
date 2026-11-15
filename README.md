@@ -53,7 +53,7 @@ Activate the environment, then install dependencies:
 
 **Windows**
 ```powershell
-.venv\\Scripts\\activate
+.venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
@@ -94,7 +94,7 @@ A short, metrics-aware recording script is available in [DEMO_SCRIPT.md](DEMO_SC
 The enhanced Google Colab benchmark used 2,557 daily NASA POWER calendar records (2019-01-01 to 2025-12-31). After creating next-calendar-day targets and removing rows without complete features, it produced 2,550 supervised observations: 2,040 training observations and 510 chronological held-out test observations. Four models were compared, with model selection based on four-fold `TimeSeriesSplit` cross-validation within the training period only. The final test period was kept separate from model selection.
 
 | Model | Training CV MAE | Held-out MAE | Held-out RMSE | Held-out R² | MAE improvement vs persistence | MAE improvement vs seasonal |
-|---|---:|---:|---:|---:|
+|---|---:|---:|---:|---:|---:|---:|
 | Extra Trees | 0.4546 | **0.3779** | **0.5658** | **0.8053** | **7.69%** | **29.15%** |
 | Linear Regression | 0.4573 | 0.4025 | 0.5756 | 0.7985 | 1.69% | 24.54% |
 | Random Forest | 0.4697 | 0.3914 | 0.5814 | 0.7944 | 4.42% | 26.63% |
