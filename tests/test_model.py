@@ -26,6 +26,15 @@ def test_target_is_next_day_and_last_row_is_removed():
     assert prepared.iloc[0]["target_date"] == raw.index[0] + pd.Timedelta(days=1)
 
 
+def test_missing_calendar_day_does_not_create_false_next_day_pair():
+    raw = sample_data(12).drop(pd.Timestamp("2023-01-05"))
+    prepared = make_supervised(raw)
+    # Jan 4 cannot be used because Jan 5 target observation is missing.
+    assert pd.Timestamp("2023-01-04") not in prepared.index
+    # Jan 5 itself is absent; Jan 6 can still predict Jan 7.
+    assert pd.Timestamp("2023-01-06") in prepared.index
+
+
 def test_seasonal_features_are_finite():
     prepared = make_supervised(sample_data())
     assert np.isfinite(prepared[["day_sin", "day_cos"]].to_numpy()).all()
