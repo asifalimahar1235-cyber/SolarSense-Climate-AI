@@ -69,3 +69,22 @@ def test_evaluation_returns_required_metrics():
 def test_invalid_split_fraction_rejected():
     with pytest.raises(ValueError):
         chronological_split(make_supervised(sample_data()), 1.0)
+
+
+def test_published_benchmark_artifacts_are_consistent():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    comparison = pd.read_csv(root / "results" / "solarsense_model_comparison.csv")
+    summary = pd.read_csv(root / "results" / "solarsense_enhanced_summary.csv").iloc[0]
+    predictions = pd.read_csv(root / "results" / "solarsense_enhanced_predictions.csv")
+
+    assert len(predictions) == int(summary["test_observations"])
+    assert comparison.iloc[0]["model"] == summary["selected_model"]
+    assert mean_absolute_error(
+        predictions["actual"], predictions["predicted"]
+    ) == pytest.approx(summary["test_mae"], abs=1e-8)
+    assert mean_absolute_error(
+        predictions["actual"], predictions["persistence"]
+    ) == pytest.approx(summary["persistence_mae"], abs=1e-8)
+    assert predictions["target_date"].is_monotonic_increasing
